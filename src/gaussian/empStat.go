@@ -7,29 +7,28 @@ Description : It returns empirical statistic from floating point data that
 	covariance, variance, mean.
 */
 
-
-package	main
+package gaussian 
 
 import (
-	"fmt"
 	"math/rand"
 	"math"
 	"time"
 )
 
 type matrix [][]float64
+type vector []float64
 
-func empCor(x matrix) matrix{
+func EmpCor(x matrix) matrix{
 	/*
-	* 'x' is an i*j matrix that each row represnts data points(j) and
-	* each column represents dimensions (i).
+	* 'x' is an i*j matrix that each row represnts data points(i) and
+	* each column represents dimensions (j).
 	*
 	* It returns an i*i correlation matrix.
 	*/
-	cov := empCovar(x)
-	cor := make([][]float64, len(cov))
+	cov := EmpCovar(x)
+	cor := make(matrix, len(cov))
 	for i := 0; i < len(cor) ; i ++ {
-		cor[i] = make([]float64, len(cov[i]))
+		cor[i] = make(vector, len(cov[i]))
 	}
 	
 	for i := 0; i < len(cov) ; i ++ {
@@ -41,14 +40,15 @@ func empCor(x matrix) matrix{
 	return cor
 }
 
-func empCovar(x matrix) matrix {
+func EmpCovar(x matrix) matrix {
 	/*
-	* 'x' is an i*j matrix that each row represnts data points(j) and
-	* each column represents dimensions (i).
+	* 'x' is an i*j matrix that each column represnts data points(j) and
+	* each row represents dimensions (i). (Note that each column vector
+	* represents data)
 	* 
 	* It returns an i*i covariance matrix.
 	*/
-	mean := empMeanMultivar(x)
+	mean := EmpMeanMultivar(x)
 	cov := make([][]float64 , len(x))
 	sum := 0.0
 
@@ -69,8 +69,8 @@ func empCovar(x matrix) matrix {
 	return cov
 }
 
-func empVar(x []float64) float64 {
-	mean := empMeanUnivar(x)
+func EmpVar(x vector) float64 {
+	mean := EmpMeanUnivar(x)
 	sum := 0.0
 	i := 0
 	for i < len(x){
@@ -80,7 +80,7 @@ func empVar(x []float64) float64 {
 	return sum/float64(len(x))
 }
 
-func empMeanMultivar(x matrix) []float64 {
+func EmpMeanMultivar(x matrix) []float64 {
 	sum := make([]float64, len(x))
 	for i := 0 ; i < len(x); i++{
 		for j := 0 ; j < len(x[i]) ; j++{
@@ -91,7 +91,7 @@ func empMeanMultivar(x matrix) []float64 {
 	return sum
 }
 
-func empMeanUnivar(x []float64) float64{
+func EmpMeanUnivar(x vector) float64{
 	sum := 0.0
 	i := 0
 	for i < len(x){
@@ -101,7 +101,7 @@ func empMeanUnivar(x []float64) float64{
 	return sum/float64(len(x))
 }
 
-func randomMatrix(n int, m int) [][]float64{
+func RandomMatrix(n int, m int) matrix{
 	rand.Seed(time.Now().UTC().UnixNano())
 	multiFloat := make([][]float64, n)
 	
@@ -112,24 +112,4 @@ func randomMatrix(n int, m int) [][]float64{
 		}
 	} 
 	return multiFloat
-}
-
-func main(){
-	var randomFloat [100]float64
-	multiFloat := randomMatrix(3,100)
-
-	i := 0
-	for i < 100 {
-		randomFloat[i] = rand.Float64()*100
-		i++
-	}
-	fmt.Println("EmpMean : " , empMeanUnivar(randomFloat[:]))
-	fmt.Println("EmpVar : " , empVar(randomFloat[:]))
-
-	fmt.Println("Emp mean Multivar : ", empMeanMultivar(multiFloat))
-	fmt.Println("Emp covariance Multivar : ", empCovar(multiFloat))
-	fmt.Println("Emp correlation coefficient Multivar : ", empCor(multiFloat))
-	fmt.Println("Emp var for 0`th data : ", empVar(multiFloat[0]))
-	fmt.Println("Emp var for 1`th data : ", empVar(multiFloat[1]))
-	fmt.Println("Emp var for 2`th data : ", empVar(multiFloat[2]))
 }
