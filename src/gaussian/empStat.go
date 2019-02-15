@@ -13,22 +13,23 @@ import (
 	"math/rand"
 	"math"
 	"time"
+	"matop"
 )
 
-type matrix [][]float64
-type vector []float64
+type Matrix = matop.Matrix 
+type Vector = matop.Vector
 
-func EmpCor(x matrix) matrix{
+func EmpCor(x Matrix) Matrix{
 	/*
-	* 'x' is an i*j matrix that each row represnts data points(i) and
+	* 'x' is an i*j Matrix that each row represnts data points(i) and
 	* each column represents dimensions (j).
 	*
-	* It returns an i*i correlation matrix.
+	* It returns an i*i correlation Matrix.
 	*/
 	cov := EmpCovar(x)
-	cor := make(matrix, len(cov))
+	cor := make(Matrix, len(cov))
 	for i := 0; i < len(cor) ; i ++ {
-		cor[i] = make(vector, len(cov[i]))
+		cor[i] = make(Vector, len(cov[i]))
 	}
 	
 	for i := 0; i < len(cov) ; i ++ {
@@ -40,13 +41,13 @@ func EmpCor(x matrix) matrix{
 	return cor
 }
 
-func EmpCovar(x matrix) matrix {
+func EmpCovar(x Matrix) Matrix {
 	/*
-	* 'x' is an i*j matrix that each column represnts data points(j) and
-	* each row represents dimensions (i). (Note that each column vector
+	* 'x' is an i*j Matrix that each column represnts data points(j) and
+	* each row represents dimensions (i). (Note that each column Vector
 	* represents data)
 	* 
-	* It returns an i*i covariance matrix.
+	* It returns an i*i covariance Matrix.
 	*/
 	mean := EmpMeanMultivar(x)
 	cov := make([][]float64 , len(x))
@@ -69,7 +70,7 @@ func EmpCovar(x matrix) matrix {
 	return cov
 }
 
-func EmpVar(x vector) float64 {
+func EmpVar(x Vector) float64 {
 	mean := EmpMeanUnivar(x)
 	sum := 0.0
 	i := 0
@@ -80,7 +81,7 @@ func EmpVar(x vector) float64 {
 	return sum/float64(len(x))
 }
 
-func EmpMeanMultivar(x matrix) []float64 {
+func EmpMeanMultivar(x Matrix) []float64 {
 	sum := make([]float64, len(x))
 	for i := 0 ; i < len(x); i++{
 		for j := 0 ; j < len(x[i]) ; j++{
@@ -91,7 +92,7 @@ func EmpMeanMultivar(x matrix) []float64 {
 	return sum
 }
 
-func EmpMeanUnivar(x vector) float64{
+func EmpMeanUnivar(x Vector) float64{
 	sum := 0.0
 	i := 0
 	for i < len(x){
@@ -101,7 +102,7 @@ func EmpMeanUnivar(x vector) float64{
 	return sum/float64(len(x))
 }
 
-func RandomMatrix(n int, m int) matrix{
+func RandomMatrix(n int, m int) Matrix{
 	rand.Seed(time.Now().UTC().UnixNano())
 	multiFloat := make([][]float64, n)
 	
