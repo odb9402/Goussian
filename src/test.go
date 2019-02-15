@@ -44,18 +44,17 @@ func main(){
 	x2 := []float64{
 		150,200,-50,
 	}
-	
-	fmt.Println("Gaussian prob of x1 data : ",
-		gaussian.GaussianMultiv(x1, gaussian.EmpMeanMultivar(multiFloat), gaussian.EmpCovar(multiFloat)))
-	fmt.Println("Gaussian prob of x2 data : ",
-		gaussian.GaussianMultiv(x2, gaussian.EmpMeanMultivar(multiFloat), gaussian.EmpCovar(multiFloat)))
 
-	fmt.Println("Gaussian prob of x1 data with another cov: ",
-		gaussian.GaussianMultiv(x1, gaussian.EmpMeanMultivar(multiFloat), m))
-	fmt.Println("Gaussian prob of x2 data with another cov: ",
-		gaussian.GaussianMultiv(x2, gaussian.EmpMeanMultivar(multiFloat), m))
-	fmt.Println("Gaussian prob of mean data with another cov: ",
-		gaussian.GaussianMultiv(gaussian.EmpMeanMultivar(multiFloat), gaussian.EmpMeanMultivar(multiFloat), m))
+	var n gaussian.MultiGaussian
+	n.InitGaussian(gaussian.EmpMeanMultivar(multiFloat), gaussian.EmpCovar(multiFloat))
+	fmt.Println("Gaussian prob of x1 data : ", n.GaussianMultiv(x1))
+	fmt.Println("Gaussian prob of x2 data : ", n.GaussianMultiv(x2))
+
+	var p gaussian.MultiGaussian
+	p.InitGaussian(gaussian.EmpMeanMultivar(multiFloat), m)
+	fmt.Println("Gaussian prob of x1 data with another cov: ", n.GaussianMultiv(x1))
+	fmt.Println("Gaussian prob of x2 data with another cov: ", n.GaussianMultiv(x2))
+	fmt.Println("Gaussian prob of mean data with another cov: ", n.GaussianMultiv(gaussian.EmpMeanMultivar(multiFloat)))
 
 
 }

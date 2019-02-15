@@ -18,20 +18,34 @@ import (
 
 const pi = math.Pi
 
+type MultiGaussian struct{
+	mean Vector
+	cov Matrix
+
+	cov_inv Matrix
+	a float64
+}
+
 func GaussianUniv(x float64, mean float64, variance float64) float64{
 	return 1/math.Sqrt(2*pi*math.Abs(variance))*math.Exp((x - mean)/(2*math.Abs(variance)))
 }
 
-func GaussianMultiv(x Vector, mean Vector, cov Matrix) float64{
-	if len(x) != len(mean){
-		message := fmt.Sprintf("ERROR: Length of input vector (%d) and mean (%d) are different.\n", len(x),len(mean))
+func (n *MultiGaussian) InitGaussian(mean Vector, cov Matrix) {
+	n.mean = mean
+	n.cov = cov
+	n.cov_inv = matop.Inv(n.cov)
+	n.a = math.Sqrt(matop.Det(matop.ScalarMul(n.cov,2*pi)))
+}
+
+func (n MultiGaussian) GaussianMultiv(x Vector) float64{
+	if len(x) != len(n.mean){
+		message := fmt.Sprintf("ERROR: Length of input vector (%d) and mean (%d) are different.\n", len(x),len(n.mean))
 		errors.New(message)
 		fmt.Println(errors.New(message))
 		return 0.0
 	}
-	a := math.Sqrt(matop.Det(matop.ScalarMul(cov,2*pi)))
-	meanShift := matop.Sub(matop.VecToMatrix(x),matop.VecToMatrix(mean))
-	mult := matop.Mult(matop.Mult(matop.Transpose(meanShift), matop.Inv(cov)), meanShift)
-	fmt.Println(a, meanShift, mult, matop.Det(mult))
-	return (1/a)*math.Exp(-0.5*matop.Det(mult))
+	meanShift := matop.Sub(matop.VecToMatrix(x),matop.VecToMatrix(n.mean))
+	mult := matop.Det(matop.Mult(matop.Mult(matop.Transpose(meanShift), n.cov_inv), meanShift))
+	
+	return (1/n.a)*math.Exp(-0.5*mult)
 }
