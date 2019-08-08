@@ -134,10 +134,6 @@ func luDecomp(x Matrix) [][]float64 {
 	return LU
 }
 
-func calcL(A Matrix, L Matrix) Matrix {
-	
-}
-
 func CholeskyDecomp(x Matrix) Matrix {
 	l := make(Matrix, len(x))
 	for i := 0; i < len(x[0]); i++ {

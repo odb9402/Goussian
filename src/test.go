@@ -20,6 +20,7 @@ func main() {
 		randomFloat[i] = rand.Float64() * 100
 		i++
 	}
+
 	fmt.Println("EmpMean : ", gaussian.EmpMeanUnivar(randomFloat[:]))
 	fmt.Println("EmpVar : ", gaussian.EmpVar(randomFloat[:]))
 
@@ -56,9 +57,9 @@ func main() {
 
 	var p gaussian.MultiGaussian
 	p.InitGaussian(gaussian.EmpMeanMultivar(multiFloat), m)
-	fmt.Println("Gaussian prob of x1 data with another cov: ", n.GaussianMultiv(x1))
-	fmt.Println("Gaussian prob of x2 data with another cov: ", n.GaussianMultiv(x2))
-	fmt.Println("Gaussian prob of mean data with another cov: ", n.GaussianMultiv(gaussian.EmpMeanMultivar(multiFloat)))
+	fmt.Println("Gaussian prob of x1 data with another cov: ", p.GaussianMultiv(x1))
+	fmt.Println("Gaussian prob of x2 data with another cov: ", p.GaussianMultiv(x2))
+	fmt.Println("Gaussian prob of mean data with another cov: ", p.GaussianMultiv(gaussian.EmpMeanMultivar(multiFloat)))
 
 	plt, err := plot.New()
 	if err != nil {
