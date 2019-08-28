@@ -26,7 +26,22 @@ func VecToMatrix(x Vector) [][]float64 {
 	return m
 }
 
+func VecToDiagonal(x Vector) [][]float64 {
+	/*
+	* Convert Vector to n*n size Diagonal matrix.
+	 */
+	m := make(Matrix, len(x))
+	for i := 0; i < len(m); i++ {
+		m[i] = make(Vector, len(x))
+		m[i][i] = x[i]
+	}
+	return m
+}
+
 func Mult(x Matrix, y Matrix) [][]float64 {
+	/*
+	* Simple matrix multiplication with a*n and n*b.
+	 */
 	if len(x[0]) != len(y) {
 		return nil
 	} else {
@@ -36,8 +51,10 @@ func Mult(x Matrix, y Matrix) [][]float64 {
 		}
 
 		for i := 0; i < len(x); i++ {
-			for j := 0; j < len(x); j++ {
-				z[i][j] = x[i][j] * y[j][i]
+			for j := 0; j < len(y[0]); j++ {
+				for k := 0; k < len(x); k++ {
+					z[i][j] += x[i][k] * y[k][j]
+				}
 			}
 		}
 		return z

@@ -61,6 +61,8 @@ func main() {
 	fmt.Println("Gaussian prob of x2 data with another cov: ", p.GaussianMultiv(x2))
 	fmt.Println("Gaussian prob of mean data with another cov: ", p.GaussianMultiv(gaussian.EmpMeanMultivar(multiFloat)))
 
+	p.Sampling()
+
 	plt, err := plot.New()
 	if err != nil {
 		panic(err)

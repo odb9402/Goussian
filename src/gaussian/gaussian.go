@@ -13,6 +13,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"math/rand"
 	"matop"
 )
 
@@ -22,7 +23,7 @@ type MultiGaussian struct {
 	mean Vector
 	cov  Matrix
 
-	cov_inv Matrix
+	cov_inv Matrix // Pre computed inverse of the covariance.
 	a       float64
 }
 
@@ -56,6 +57,15 @@ Cholesky decomposition for the covariance matrix and Box-Muller transfrom.
 func (n MultiGaussian) Sampling() Vector {
 	dim := len(n.cov)
 	data := make(Vector, dim)
+
+	for i := 0; i < dim; i++ {
+		data[i] = rand.NormFloat64()
+	}
+	fmt.Println(data)
+	fmt.Println(n.cov)
+	fmt.Println(matop.VecToMatrix(data))
+
+	fmt.Println(matop.Mult(n.cov, matop.VecToMatrix(data)))
 
 	return data
 }
